@@ -4,6 +4,18 @@
 // node api/index.js to run backend
 // install nodemon => npm run dev
 import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
+
+mongoose.connect(process.env.MONGO)
+.then(() => {
+    console.log('Connect to MongoDB!')
+})
+.catch((err) => {
+    console.log(err)
+});
+
 const app = express();
 
 app.listen(3000, ()=> {
