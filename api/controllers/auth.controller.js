@@ -1,7 +1,14 @@
+import bcryptjs from 'bcryptjs'; // hash user password in database
 import User from '../modals/user.model.js'
+
 export const signup = async (req, res) => {
     const { username, email, password } = req.body;
-    const newUser = new User({ username, email, password})
-    await newUser.save()
-    res.status(201).json('User created successfully!')
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+    const newUser = new User({ username, email, password: hashedPassword})
+    try {
+        await newUser.save()
+        res.status(201).json('User created successfully!')
+    }catch(err) {
+        res.status(500).json(err.message)
+    }
 }
