@@ -29,7 +29,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [fileUploadError, setFileUploadError] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
-
+  const [showListingError, setShowListingError] = useState(false);
+  const [userListings, setUserListings] = useState([]);
   const fileRef = useRef(null);
   // firebase storage
   // allow read;
@@ -41,7 +42,6 @@ export default function Profile() {
     const fileName = new Date().getTime() + file.name;
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -116,6 +116,21 @@ export default function Profile() {
     } catch (error) {
       dispatch(signOutUserFailure());
     }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowListingError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingError(true);
+    }
+    console.log();
   };
   useEffect(() => {
     if (file) {
@@ -209,6 +224,45 @@ export default function Profile() {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
       </p>
+      <button
+        className="text-green-700 w-full border p-2 bg-slate-200 rounded-lg"
+        onClick={handleShowListings}
+      >
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingError ? "Error showing listings" : ""}
+      </p>
+      <div className="flex flex-col gap-4">
+        <h1 className="text-center my-4 text-2xl">Your Listings</h1>
+        {userListings &&
+          userListings.length > 0 &&
+          userListings.map((listing) => (
+            <div
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+              key={listing._id}
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  className="h-16 w-16 rounded-lg object-contain"
+                  src={listing.imageUrls[0]}
+                  alt="listings image"
+                />
+              </Link>
+              <Link
+                className="flex-1 truncate 
+            text-slate-700 font-semibold hover:underline"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col items-center">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 }
