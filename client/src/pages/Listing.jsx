@@ -14,6 +14,7 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
+import Contact from "./Contact";
 
 export default function Listing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -22,6 +23,7 @@ export default function Listing() {
   const [listing, setListing] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [contact, setContact] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -51,15 +53,15 @@ export default function Listing() {
         <p className="text-center my-7 text-2xl">Something went wrong</p>
       )}
       {listing && !loading && !error && (
-        <div className="max-w-[1020px] mx-auto">
+        <div className="mx-auto">
           <Swiper navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
                 <div
-                  className="h-[320px]"
+                  className="h-[560px]"
                   style={{
                     background: `url(${url}) center no-repeat`,
-                    backgroundSize: "contain",
+                    backgroundSize: "cover",
                   }}
                 ></div>
               </SwiperSlide>
@@ -113,6 +115,16 @@ export default function Listing() {
                 {listing.furnished ? "Furnished" : "Unfurnished"}
               </li>
             </ul>
+            {currentUser && listing.userRef === currentUser._id && !contact && (
+              <button
+                onClick={() => setContact(true)}
+                className="bg-slate-700 text-white rounded-lg uppercase 
+                hover:opacity-95 p-3"
+              >
+                Contact Landlord
+              </button>
+            )}
+            {contact && <Contact listing={listing} />}
           </div>
         </div>
       )}
