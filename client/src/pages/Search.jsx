@@ -6,6 +6,7 @@ export default function Search() {
   const navigate = useNavigate();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
     type: "sale",
@@ -48,16 +49,19 @@ export default function Search() {
     // fech data here
     const fetchListings = async () => {
       setLoading(true);
+      setShowMore(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
+      console.log(data, data.length);
+      if (data.length > 8) {
+        setShowMore(true);
+      }
       setListings(data);
       setLoading(false);
     };
     fetchListings();
   }, [location.search]);
-
-  console.log(listings, "listings");
 
   const handleChange = (e) => {
     if (
@@ -112,6 +116,20 @@ export default function Search() {
     urlParams.set("order", sidebarData.order);
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`);
+  };
+
+  const onShowMoreClick = async () => {
+    const numberOfListings = listings.length;
+    const urlParams = new URLSearchParams(location.search);
+    const startIndex = numberOfListings;
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
   };
 
   return (
@@ -238,6 +256,17 @@ export default function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+          {showMore && (
+            <div className="w-full text-center flex justify-center">
+              {" "}
+              <button
+                className="bg-green-500 text-white hover:underline p-5 h-[24px] flex items-center rounded-lg"
+                onClick={() => onShowMoreClick()}
+              >
+                Show More
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
