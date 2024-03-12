@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
-
+import path from 'path';
 import cookieParser from 'cookie-parser'; // get information from cookie
 dotenv.config();
 
@@ -20,6 +20,8 @@ mongoose.connect(process.env.MONGO)
 .catch((err) => {
     console.log(err)
 });
+
+const _dirname = path.resolve();
 
 const app = express();
 app.use(express.json());
@@ -32,6 +34,12 @@ app.listen(3000, ()=> {
 app.use('/api/user', userRouter)
 app.use('/api/auth', authRouter)
 app.use('/api/listing', listingRouter)
+
+app.use(express.static(path.join(_dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html'));
+})
 
 // create a middleware to handle error
 app.use((err, req, res, next) => {
