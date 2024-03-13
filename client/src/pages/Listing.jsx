@@ -14,36 +14,26 @@ import {
   FaShare,
 } from "react-icons/fa";
 import Contact from "../components/Contact";
+import { getListings } from "../api/listing";
+import useHttp from "../api/useHttp";
 
 export default function Listing() {
   const { currentUser } = useSelector((state) => state.user);
   SwiperCore.use(Navigation);
   const params = useParams();
   const [listing, setListing] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [contact, setContact] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { sendRequest, loading, error } = useHttp();
+
+  const fetchData = () => {
+    sendRequest(getListings(params.listingId), (responseData) => {
+      setListing(responseData);
+    });
+  };
 
   useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/listing/get/${params.listingId}`);
-        const data = await res.json();
-        setListing(data);
-        if (data.success === false) {
-          setError(true);
-          setLoading(false);
-          return;
-        }
-        setLoading(false);
-      } catch (error) {
-        setError(true);
-        setLoading(false);
-      }
-    };
-    fetchListing();
+    fetchData();
   }, [params.listingId]);
 
   return (
@@ -51,7 +41,8 @@ export default function Listing() {
       {loading && <p className="text-center my-7 text-2xl">Loading ...</p>}
       {error && (
         <p className="text-center my-7 text-2xl">
-          Something went wrong, please sign in
+          {/* Something went wrong, please sign in */}
+          {error}
         </p>
       )}
       {listing && !loading && !error && (
