@@ -19,3 +19,13 @@ export const userSignUp = (data): requestType => ({
     data,
 })
 
+export const userSignIn = (data): requestType => ({
+    ...commonObj,
+    method: 'POST',
+    url: "/api/auth/signin",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    data,
+})
+

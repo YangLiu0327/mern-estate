@@ -7,12 +7,15 @@ import {
   signInFailure,
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
+import useHttp from "../api/useHttp";
+import { userSignIn } from "../api/user";
 
 export default function SignUp() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { sendRequest } = useHttp();
 
   const handleChange = (e) => {
     setFormData({
@@ -25,20 +28,22 @@ export default function SignUp() {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      console.log(data);
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
-        return;
-      }
-      dispatch(signInSuccess(data));
+      // const res = await fetch("/api/auth/signin", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+      // const data = await res.json();
+      // console.log(data);
+      const response = await sendRequest(userSignIn(formData));
+      console.log(response, "response");
+      // if (data.success === false) {
+      //   dispatch(signInFailure(data.message));
+      //   return;
+      // }
+      dispatch(signInSuccess(response));
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));

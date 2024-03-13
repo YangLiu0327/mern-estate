@@ -8,6 +8,8 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import useHttp from "../api/useHttp";
+import { updateListings } from "../api/listing";
 
 export default function UpdateListing() {
   const { currentUser } = useSelector((state) => state.user);
@@ -33,6 +35,7 @@ export default function UpdateListing() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { sendRequest } = useHttp();
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -144,19 +147,22 @@ export default function UpdateListing() {
         return setError("You must upload at least one image");
       if (+formData.regularPrice < +formData.discountPrice)
         return setError("Discount price must be lower than regular price");
-      const res = await fetch(`/api/listing/update/${params.id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      setLoading(false);
-      if (data.success === false) {
-        setError(error.message);
-      }
-      navigate(`/listing/${data._id}`);
+      // const res = await fetch(`/api/listing/update/${params.id}`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+      const response = await sendRequest(updateListings(params.id, formData));
+
+      console.log(response, "response in update listing");
+      // const data = await res.json();
+      // setLoading(false);
+      // if (data.success === false) {
+      //   setError(error.message);
+      // }
+      navigate(`/listing/${response._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);

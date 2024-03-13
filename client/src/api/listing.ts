@@ -13,3 +13,14 @@ export const getListings = (listingId): requestType => ({
     ...commonObj,
     url: `/api/listing/get/${listingId}`,
 })
+
+export const updateListings = (listingId, data): requestType => ({
+    ...commonObj,
+    url: `/api/listing/update/${listingId}`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    data
+})
+
