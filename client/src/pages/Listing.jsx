@@ -26,15 +26,17 @@ export default function Listing() {
   const [copied, setCopied] = useState(false);
   const { sendRequest, loading, error } = useHttp();
 
-  const fetchData = () => {
-    sendRequest(getListings(params.listingId), (responseData) => {
-      setListing(responseData);
-    });
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await sendRequest(getListings(params.listingId));
+        setListing(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchData();
-  }, [params.listingId]);
+  }, [params.listingId, sendRequest]);
 
   return (
     <main>
