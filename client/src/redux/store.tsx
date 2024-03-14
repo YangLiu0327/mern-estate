@@ -1,14 +1,17 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import useReducer  from './user/userSlice'
-import {persistStore, persistReducer} from 'redux-persist'
+import useReducer  from './user/userSlice.tsx'
+import {persistStore, persistReducer, PersistConfig} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
+export interface RootState {
+  user: ReturnType<typeof useReducer>
+}
 const rootReducer = combineReducers({user: useReducer});
 
-const persistConfig = {
+const persistConfig: PersistConfig<RootState> = {
   key: 'root',
   storage,
-  versoon: 1,
+  version: 1,
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

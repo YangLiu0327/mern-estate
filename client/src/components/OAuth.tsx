@@ -1,10 +1,11 @@
+import React from "react";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 import { app } from "../firebase";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { signInSuccess } from "../redux/user/userSlice";
+import { signInSuccess } from "../redux/user/userSlice.tsx";
 
-export default function OAuth() {
+const OAuth = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleGoogleClick = async () => {
@@ -40,3 +41,5 @@ export default function OAuth() {
     </button>
   );
 }
+
+export default OAuth;

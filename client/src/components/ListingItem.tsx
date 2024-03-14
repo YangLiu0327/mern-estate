@@ -1,8 +1,26 @@
-/* eslint-disable react/prop-types */
+import React from "react";
 import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
 
-export default function ListingItem({ listing }) {
+interface Listing  {
+  _id: number;
+  imageUrls: string;
+  name: string;
+  address: string;
+  description: string;
+  offer: boolean;
+  discountPrice: number;
+  regularPrice: number;
+  type: string;
+  bedrooms: number;
+  bathrooms: number;
+}
+
+interface ListingProps {
+  listing: Listing;
+}
+
+const ListingItem = ({ listing }: ListingProps) => {
   return (
     <div
       className="bg-white shadow-md hover:shadow-lg
@@ -51,3 +69,4 @@ export default function ListingItem({ listing }) {
     </div>
   );
 }
+export default ListingItem;

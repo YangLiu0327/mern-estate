@@ -5,8 +5,8 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../redux/user/userSlice";
-import OAuth from "../components/OAuth";
+} from "../redux/user/userSlice.tsx";
+import OAuth from "../components/OAuth.tsx";
 import useHttp from "../api/useHttp";
 import { userSignIn } from "../api/user";
 

@@ -19,7 +19,7 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from "../redux/user/userSlice";
+} from "../redux/user/userSlice.tsx";
 
 export default function Profile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);

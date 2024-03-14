@@ -1,15 +1,16 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import Profile from "./pages/Profile";
-import About from "./pages/About";
-import Head from "./components/Head";
-import PrivateRoute from "./components/PrivateRoute";
+import Home from "./pages/Home.jsx";
+import SignIn from "./pages/SignIn.jsx";
+import SignUp from "./pages/SignUp.jsx";
+import Profile from "./pages/Profile.jsx";
+import About from "./pages/About.tsx";
+import Head from "./components/Head.tsx";
+import PrivateRoute from "./components/PrivateRoute.tsx";
 import CreateListing from "./pages/CreateListing";
-import UpdateListing from "./pages/UpdateListing";
-import Listing from "./pages/Listing";
-import Search from "./pages/Search";
+import UpdateListing from "./pages/UpdateListing.jsx";
+import Listing from "./pages/Listing.jsx";
+import Search from "./pages/Search.jsx";
 
 export default function App() {
   return (

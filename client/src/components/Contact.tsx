@@ -1,11 +1,25 @@
-/* eslint-disable react/prop-types */
-import { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 
-export default function Contact({ listing }) {
-  const [landlord, setLandlord] = useState(null);
-  const [message, setMessage] = useState(null);
-  const onChange = (e) => {
+
+interface Listing {
+  userRef: string;
+  name: string;
+}
+
+interface User  {
+  username: string;
+  email: string;
+}
+
+interface ContactProps {
+  listing: Listing;
+}
+const Contact = ({ listing }: ContactProps) =>{
+  const [landlord, setLandlord] = useState<User | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const onChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
   };
   useEffect(() => {
@@ -32,9 +46,9 @@ export default function Contact({ listing }) {
           <textarea
             name="message"
             id="message"
-            rows="2"
+            rows={2}
             onChange={onChange}
-            value={message}
+            value={message || ""}
             placeholder="Enter your message here..."
             className="w-full border p-3 rounded-lg my-4"
           />
@@ -49,3 +63,6 @@ export default function Contact({ listing }) {
     </div>
   );
 }
+
+export default Contact;
+

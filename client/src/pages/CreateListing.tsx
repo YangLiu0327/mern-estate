@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React from "react";
+import { FC, useState, ChangeEvent, FormEvent } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -8,12 +9,29 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import  { RootState } from "../redux/store";
 
-export default function CreateListing() {
-  const { currentUser } = useSelector((state) => state.user);
+interface FormData {
+  imageUrls: string[];
+  name: string;
+  description: string;
+  address: string;
+  type: 'sale' | 'rent';
+  bedrooms: number;
+  bathrooms: number;
+  regularPrice: number;
+  discountPrice: number;
+  offer: boolean;
+  parking: boolean;
+  furnished: boolean;
+  userRef?: string | null;
+}
+
+const CreateListing: FC = () => {
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
-  const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({
+  const [files, setFiles] = useState<File[]>([]);
+  const [formData, setFormData] = useState<FormData>({
     imageUrls: [],
     name: "",
     description: "",
@@ -26,12 +44,12 @@ export default function CreateListing() {
     offer: false,
     parking: false,
     furnished: false,
-    userRef: currentUser._id,
+    userRef: currentUser?._id,
   });
-  const [imageUploadError, setImageUploadError] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<string | boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleImageSubmit = (e) => {
     e.preventDefault();
@@ -39,7 +57,7 @@ export default function CreateListing() {
       setUploading(true);
       setImageUploadError(false);
       // one by one update image
-      const promises = [];
+      const promises: Promise<string | any>[] = [];
 
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]));
@@ -122,6 +140,13 @@ export default function CreateListing() {
       });
     }
   };
+  const handleFileChange = (e) => {
+    const fileList = e.target.files;
+    if (fileList) {
+      const filesArray: File[] = Array.from(fileList);
+      setFiles(filesArray);
+    }
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -140,7 +165,7 @@ export default function CreateListing() {
       const data = await res.json();
       setLoading(false);
       if (data.success === false) {
-        setError(error.message);
+        setError(error);
       }
       navigate(`/listing/${data._id}`);
     } catch (error) {
@@ -160,14 +185,13 @@ export default function CreateListing() {
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
-            maxLength="62"
-            minLength="10"
+            maxLength={62}
+            minLength={10}
             required
             onChange={handleChange}
             value={formData.name}
           />
           <textarea
-            type="text"
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"
@@ -313,7 +337,7 @@ export default function CreateListing() {
           </p>
           <div className="flex gap-4">
             <input
-              onChange={(e) => setFiles(e.target.files)}
+              onChange={handleFileChange}
               type="file"
               id="images"
               accept="image/*"
@@ -367,3 +391,4 @@ export default function CreateListing() {
     </main>
   );
 }
+export default CreateListing;
