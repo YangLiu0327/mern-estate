@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
@@ -14,14 +14,16 @@ import {
   FaShare,
 } from "react-icons/fa";
 import Contact from "../components/Contact.tsx";
-import { getListings } from "../api/listing";
-import useHttp from "../api/useHttp";
+import { getListings } from "../api/listing.ts";
+import useHttp from "../api/useHttp.ts";
+import  { RootState } from "../components/Head";
+import  { Listing } from "../components/ListingItem"
 
 export default function Listing() {
-  const { currentUser } = useSelector((state) => state.user);
-  SwiperCore.use(Navigation);
+  const { currentUser } = useSelector((state: RootState) => state.user);
+  SwiperCore.use([Navigation]);
   const params = useParams();
-  const [listing, setListing] = useState(null);
+  const [listing, setListing] = useState<Listing | null>(null);
   const [contact, setContact] = useState(false);
   const [copied, setCopied] = useState(false);
   const { sendRequest, loading, error } = useHttp();

@@ -1,13 +1,22 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ListingItem from "../components/ListingItem.tsx";
+import ListingItem, { Listing } from "../components/ListingItem";
 
+interface SidebarData {
+  searchTerm: string;
+  type: string;
+  parking: boolean;
+  furnished: boolean;
+  offer: boolean;
+  sort: string;
+  order: string;
+}
 export default function Search() {
   const navigate = useNavigate();
-  const [listings, setListings] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [showMore, setShowMore] = useState(false);
-  const [sidebarData, setSidebarData] = useState({
+  const [listings, setListings] = useState<Listing[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showMore, setShowMore] = useState<boolean>(false);
+  const [sidebarData, setSidebarData] = useState<SidebarData>({
     searchTerm: "",
     type: "sale",
     parking: true,
@@ -109,9 +118,9 @@ export default function Search() {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", sidebarData.searchTerm);
     urlParams.set("type", sidebarData.type);
-    urlParams.set("parking", sidebarData.parking);
-    urlParams.set("furnished", sidebarData.furnished);
-    urlParams.set("offer", sidebarData.offer);
+    urlParams.set("parking", String(sidebarData.parking));
+    urlParams.set("furnished", String(sidebarData.furnished));
+    urlParams.set("offer", String(sidebarData.offer));
     urlParams.set("sort", sidebarData.sort);
     urlParams.set("order", sidebarData.order);
     const searchQuery = urlParams.toString();
@@ -122,7 +131,7 @@ export default function Search() {
     const numberOfListings = listings.length;
     const urlParams = new URLSearchParams(location.search);
     const startIndex = numberOfListings;
-    urlParams.set("startIndex", startIndex);
+    urlParams.set("startIndex", String(startIndex));
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/listing/get?${searchQuery}`);
     const data = await res.json();

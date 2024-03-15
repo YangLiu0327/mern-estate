@@ -9,11 +9,12 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import  { RootState } from "../redux/store";
+import  { RootState } from "../components/Head";
 
-interface FormData {
+export interface FormData {
   imageUrls: string[];
   name: string;
+  avatar: string;
   description: string;
   address: string;
   type: 'sale' | 'rent';
@@ -45,6 +46,7 @@ const CreateListing: FC = () => {
     parking: false,
     furnished: false,
     userRef: currentUser?._id,
+    avatar: "",
   });
   const [imageUploadError, setImageUploadError] = useState<string | boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);

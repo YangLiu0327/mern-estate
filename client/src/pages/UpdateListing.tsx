@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -10,13 +10,29 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import useHttp from "../api/useHttp";
 import { updateListings } from "../api/listing";
+import { RootState } from "../components/Head";
 
-export default function UpdateListing() {
-  const { currentUser } = useSelector((state) => state.user);
+export interface FormData {
+  imageUrls: string[];
+  name: string;
+  description: string;
+  address: string;
+  type: 'sale' | 'rent';
+  bedrooms: number;
+  bathrooms: number;
+  regularPrice: number;
+  discountPrice: number;
+  offer: boolean;
+  parking: boolean;
+  furnished: boolean;
+  userRef?: string | null;
+}
+const UpdateListing: React.FC = () => {
+  const { currentUser } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const params = useParams();
-  const [files, setFiles] = useState([]);
-  const [formData, setFormData] = useState({
+  const [files, setFiles] = useState<any>([]);
+  const [formData, setFormData] = useState<FormData>({
     imageUrls: [],
     name: "",
     description: "",
@@ -29,12 +45,12 @@ export default function UpdateListing() {
     offer: false,
     parking: false,
     furnished: false,
-    userRef: currentUser._id,
+    userRef: currentUser?._id,
   });
-  const [imageUploadError, setImageUploadError] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [imageUploadError, setImageUploadError] = useState<boolean | string>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean | string>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const { sendRequest } = useHttp();
 
   useEffect(() => {
@@ -56,8 +72,7 @@ export default function UpdateListing() {
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
       setImageUploadError(false);
-      const promises = [];
-
+      const promises: Promise<string | any>[] = [];
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]));
       }
@@ -180,14 +195,13 @@ export default function UpdateListing() {
             placeholder="Name"
             className="border p-3 rounded-lg"
             id="name"
-            maxLength="62"
-            minLength="10"
+            maxLength={62}
+            minLength={10}
             required
             onChange={handleChange}
             value={formData.name}
           />
           <textarea
-            type="text"
             placeholder="Description"
             className="border p-3 rounded-lg"
             id="description"
@@ -387,3 +401,5 @@ export default function UpdateListing() {
     </main>
   );
 }
+
+export default UpdateListing;

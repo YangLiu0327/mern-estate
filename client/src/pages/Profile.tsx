@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
-import { useRef, useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useRef, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { app } from "../firebase";
+import { app } from "../firebase.js";
 import {
   uploadBytesResumable,
   ref,
@@ -19,19 +18,22 @@ import {
   signOutUserStart,
   signOutUserSuccess,
   signOutUserFailure,
-} from "../redux/user/userSlice.tsx";
+} from "../redux/user/userSlice";
+import  { RootState } from "../redux/store";
+import { Listing } from "../components/ListingItem"
+import { FormData } from './CreateListing';
 
-export default function Profile() {
-  const { currentUser, error, loading } = useSelector((state) => state.user);
+const Profile: React.FC = () => {
+  const { currentUser, error, loading } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-  const [file, setFile] = useState(undefined);
-  const [filePerc, setFilePerc] = useState(0);
-  const [formData, setFormData] = useState({});
-  const [fileUploadError, setFileUploadError] = useState(false);
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  const [showListingError, setShowListingError] = useState(false);
-  const [userListings, setUserListings] = useState([]);
-  const fileRef = useRef(null);
+  const [file, setFile] = useState<File | undefined>(undefined);
+  const [filePerc, setFilePerc] = useState<number>(0);
+  const [formData, setFormData] = useState<FormData | {}>({});
+  const [fileUploadError, setFileUploadError] = useState<boolean>(false);
+  const [updateSuccess, setUpdateSuccess] = useState<boolean>(false);
+  const [showListingError, setShowListingError] = useState<boolean>(false);
+  const [userListings, setUserListings] = useState<Listing[]>([]);
+  const fileRef = useRef<HTMLInputElement>(null);
   // firebase storage
   // allow read;
   // allow write: if
@@ -68,7 +70,7 @@ export default function Profile() {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+      const res = await fetch(`/api/user/update/${currentUser?._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +92,7 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+      const res = await fetch(`/api/user/delete/${currentUser?._id}`, {
         method: "DELETE",
       });
       const data = await res.json();
@@ -114,13 +116,13 @@ export default function Profile() {
       }
       dispatch(signOutUserSuccess(data));
     } catch (error) {
-      dispatch(signOutUserFailure());
+      dispatch(signOutUserFailure(error));
     }
   };
 
   const handleShowListings = async () => {
     try {
-      const res = await fetch(`/api/user/listings/${currentUser._id}`);
+      const res = await fetch(`/api/user/listings/${currentUser?._id}`);
       const data = await res.json();
       if (data.success === false) {
         setShowListingError(true);
@@ -168,14 +170,14 @@ export default function Profile() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <input
           type="file"
-          onChange={(e) => setFile(e.target.files[0])}
+          onChange={(e) => setFile(e.target.files?.[0])}
           ref={fileRef}
           hidden
           accept="image/*"
         />
         <img
-          onClick={() => fileRef.current.click()}
-          src={formData.avatar || currentUser.avatar}
+          onClick={() => fileRef.current?.click()}
+          src={currentUser?.avatar}
           alt="user photos"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
         />
@@ -195,7 +197,7 @@ export default function Profile() {
         <input
           type="text"
           placeholder="username"
-          defaultValue={currentUser.username}
+          defaultValue={currentUser?.username}
           id="username"
           className="border p-3 rounded-lg"
           onChange={handleChange}
@@ -203,7 +205,7 @@ export default function Profile() {
         <input
           type="text"
           placeholder="email"
-          defaultValue={currentUser.email}
+          defaultValue={currentUser?.email}
           id="email"
           className="border p-3 rounded-lg"
           onChange={handleChange}
@@ -302,3 +304,5 @@ export default function Profile() {
     </div>
   );
 }
+
+export default Profile;

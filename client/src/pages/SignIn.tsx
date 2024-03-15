@@ -1,14 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice.tsx";
 import OAuth from "../components/OAuth.tsx";
-import useHttp from "../api/useHttp";
-import { userSignUp } from "../api/user";
+import useHttp from "../api/useHttp.ts";
+import { userSignIn } from "../api/user.ts";
+import  { RootState } from "../redux/store";
 
-export default function SignUp() {
+interface SignUpData {
+  email: string;
+  password: string;
+}
+
+const SignIn: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<SignUpData>({
+    email: "",
+    password: "",
+  });
+  const { loading, error } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch();
+  const { sendRequest } = useHttp();
 
-  const { sendRequest, loading, error } = useHttp();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -17,12 +34,10 @@ export default function SignUp() {
   };
 
   const handleSumbit = async (e) => {
-    // if we dont have this one, if we click button
-    // will refresh page
     e.preventDefault();
     try {
-      // setLoading(true);
-      // const res = await fetch("/api/auth/signup", {
+      dispatch(signInStart());
+      // const res = await fetch("/api/auth/signin", {
       //   method: "POST",
       //   headers: {
       //     "Content-Type": "application/json",
@@ -31,34 +46,23 @@ export default function SignUp() {
       // });
       // const data = await res.json();
       // console.log(data);
+      const response = await sendRequest(userSignIn(formData));
+      console.log(response, "response");
       // if (data.success === false) {
-      //   setLoading(false);
-      //   setError(data.message);
+      //   dispatch(signInFailure(data.message));
       //   return;
       // }
-      // setLoading(false);
-      // setError(null);
-      const response = await sendRequest(userSignUp(formData));
-      console.log(response, "response");
-      navigate("/sign-in");
+      dispatch(signInSuccess(response));
+      navigate("/");
     } catch (error) {
-      // setLoading(false);
-      // setError(error.message);
-      console.log(error);
+      dispatch(signInFailure(error.message));
     }
   };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
+      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSumbit}>
-        <input
-          type="text"
-          placeholder="username"
-          className="border p-3 rounded-lg"
-          id="username"
-          onChange={handleChange}
-        />
         <input
           type="email"
           placeholder="email"
@@ -78,17 +82,18 @@ export default function SignUp() {
           className="bg-slate-700 text-white p-3
          rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
         >
-          {loading ? "Loading..." : "Sign Up"}
+          {loading ? "Loading..." : "Sign In"}
         </button>
         <OAuth />
       </form>
       <div className="flex gap-2 mt-5">
-        <p>Have an acoount?</p>
-        <Link to={"/sign-in"}>
-          <span className="text-blue-700">Sign in</span>
+        <p>Dont Have an acoount?</p>
+        <Link to={"/sign-up"}>
+          <span className="text-blue-700">Sign Up</span>
         </Link>
         {error && <p className="text-red-500 mt-5">{error}</p>}
       </div>
     </div>
   );
 }
+export default SignIn;

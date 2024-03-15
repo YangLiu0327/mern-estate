@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 
 interface User {
   avatar: string;
+  _id: string;
 }
 export interface RootState {
   user: {

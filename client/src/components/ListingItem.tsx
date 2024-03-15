@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { MdLocationOn } from "react-icons/md";
 
-interface Listing  {
+export interface Listing  {
   _id: number;
-  imageUrls: string;
+  imageUrls: string[];
   name: string;
   address: string;
   description: string;
@@ -14,7 +14,11 @@ interface Listing  {
   type: string;
   bedrooms: number;
   bathrooms: number;
+  parking: number;
+  furnished: boolean;
+  userRef: string;
 }
+
 
 interface ListingProps {
   listing: Listing;
