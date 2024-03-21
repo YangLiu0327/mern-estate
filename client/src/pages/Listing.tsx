@@ -13,9 +13,9 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
-import Contact from "../components/Contact.tsx";
-import { getListings } from "../api/listing.ts";
-import useHttp from "../api/useHttp.ts";
+import Contact from "../components/Contact";
+import { getListings } from "../api/listing";
+import useHttp from "../api/useHttp";
 import  { RootState } from "../components/Head";
 import  { Listing } from "../components/ListingItem"
 

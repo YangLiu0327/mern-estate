@@ -9,7 +9,7 @@ interface HttpType {
 
 const useHttp = (): HttpType => {
     const [loading, setLoading ] = useState<boolean>(false);
-    const  [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     const sendRequest = useCallback(
         async(requestConfig: AxiosRequestConfig) => {
@@ -18,7 +18,7 @@ const useHttp = (): HttpType => {
 
             try {
                 const response = await axios({
-                    baseURL: 'http://localhost:3000',
+                    baseURL: process.env.REACT_APP_BASE_URL,
                     withCredentials: true,
                     ...requestConfig
                 });

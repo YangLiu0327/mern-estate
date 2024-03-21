@@ -1,5 +1,5 @@
 import React from "react";
-import { FC, useState, ChangeEvent, FormEvent } from "react";
+import { useState } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -28,7 +28,7 @@ export interface FormData {
   userRef?: string | null;
 }
 
-const CreateListing: FC = () => {
+const CreateListing: React.FC = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
   const [files, setFiles] = useState<File[]>([]);
@@ -53,7 +53,7 @@ const CreateListing: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleImageSubmit = (e) => {
+  const handleImageSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
@@ -107,7 +107,7 @@ const CreateListing: FC = () => {
       );
     });
   };
-  const handleRemoveImage = (index) => {
+  const handleRemoveImage = (index: number) => {
     setFormData({
       ...formData,
       imageUrls: formData.imageUrls.filter((_, item) => item !== index),
@@ -142,14 +142,14 @@ const CreateListing: FC = () => {
       });
     }
   };
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (fileList) {
       const filesArray: File[] = Array.from(fileList);
       setFiles(filesArray);
     }
   }
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     try {
