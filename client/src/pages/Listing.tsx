@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useSelector } from "react-redux";
 import SwiperCore from "swiper";
@@ -45,8 +45,7 @@ export default function Listing() {
       {loading && <p className="text-center my-7 text-2xl">Loading ...</p>}
       {error && (
         <p className="text-center my-7 text-2xl">
-          {/* Something went wrong, please sign in */}
-          {error}
+         Please <Link to="/sign-in" className="text-blue-700">sign in</Link> to view more content. 🔒 
         </p>
       )}
       {listing && !loading && !error && (
