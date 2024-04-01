@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+// https://m.qqmmgg.com/show/78815.html
 const userSchema = new mongoose.Schema(
     {
         username: {
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
         },
         avatar: {
             type: String,
-            default: "http://up.qqmmgg.com/up/33/97/2c/33972c269fad442b494ee6a6d0fe7a94.jpg"
+            default: "https://img2.imgtp.com/2024/04/01/a7ry4B8Q.jpeg"
         },
     },
     {timestamps: true}
