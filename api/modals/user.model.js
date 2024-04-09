@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-// https://m.qqmmgg.com/show/78815.html
 const userSchema = new mongoose.Schema(
     {
         username: {

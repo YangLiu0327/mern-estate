@@ -6,7 +6,7 @@ export default function About() {
     {
       id: 1,
       text:
-        `YANG Estate is a leading real estate agency
+        `YANG Estate is leading real estate agency
         that specializes in helping clients buy, sell, 
         and rent properties in the most desirable neighborhoods. 
         Our team of experienced agents is dedicated to providing

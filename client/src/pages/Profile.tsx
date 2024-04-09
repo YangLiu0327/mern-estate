@@ -163,7 +163,7 @@ const Profile: React.FC = () => {
       handleFileUpload(file);
     }
   }, [file]);
-
+ 
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -178,7 +178,7 @@ const Profile: React.FC = () => {
         <img
           onClick={() => fileRef.current?.click()}
           src={currentUser?.avatar}
-          alt="user photos"
+          alt="avatar"
           className="rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2"
         />
         <p className="text-sm self-center">
