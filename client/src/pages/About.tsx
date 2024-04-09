@@ -1,4 +1,7 @@
 import React from "react";
+import aboutImage from '../assets/about_image1.jpeg';
+import client from '../assets/clients.jpeg';
+import service from '../assets/service.jpeg';
 
 export default function About() {
   const aboutPageData = [
@@ -10,7 +13,7 @@ export default function About() {
         Our team of experienced agents is dedicated to providing
         exceptional service and making the buying and selling 
         process as smooth as possible.`,
-      image: "src/assets/about_image1.jpeg",
+      image: aboutImage,
     },
     {
       id: 2,
@@ -19,7 +22,7 @@ export default function About() {
         service, and a deep understanding of the local market. 
         Whether you are looking to buy, sell, or rent a property, 
         we are here to help you every step of the way.`,
-      image: "src/assets/clients.jpeg",
+      image: client,
     },
     {
       id: 3,
@@ -30,7 +33,7 @@ export default function About() {
         should be an exciting and rewarding experience, 
         and we are dedicated to making that a reality for each 
         and every one of our clients.`,
-      image: "src/assets/service.jpeg",
+      image: service,
     },
   ];
   return (
